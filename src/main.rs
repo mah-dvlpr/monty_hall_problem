@@ -47,7 +47,7 @@ fn main() {
         }
         
         // From logic above, "switching" means always picking the second door (index 1),
-        // (since our initial guess will have index 0)
+        // since our initial guess will have index 0.
         smart.push(doors[1]);
     }
 

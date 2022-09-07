@@ -17,6 +17,10 @@ fn main() {
     let iterations = args.iterations;
     let num_doors = args.num_doors;
 
+    if num_doors < 3 {
+        panic!("Number of doors has to be greater than or equal to 3 (doors >= 3).");
+    }
+
     let mut rng = thread_rng();
     let mut simple = Vec::<bool>::with_capacity(iterations);
     let mut smart = Vec::<bool>::with_capacity(iterations);

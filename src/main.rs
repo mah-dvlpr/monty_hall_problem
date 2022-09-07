@@ -59,7 +59,7 @@ fn main() {
                 acc
             }
         };
-        println!("{}: {}%", prefix, v.iter().fold(0, fun) as f64 / iterations as f64);
+        println!("{}: {}%", prefix, (v.iter().fold(0, fun) as f64 / iterations as f64) * 100_f64);
     };
 
     print_format("Simple", &simple);

@@ -55,20 +55,23 @@ fn main() {
         }));
     }
 
-    let mut simple = 0_f64;
-    let mut smart = 0_f64;
-    let len = tasks.len() as f64;
-    for t in tasks {
-        let mut _simple;
-        let mut _smart;
+    let async_main = async {
+        let mut simple = 0_f64;
+        let mut smart = 0_f64;
+        let len = tasks.len() as f64;
+        for t in tasks {
+            let mut _simple;
+            let mut _smart;
 
-        (_simple, _smart) = task::block_on(t);
-        simple += _simple;
-        smart += _smart;
-    }
-    simple /= len;
-    smart /= len;
+            (_simple, _smart) = t.await;
+            simple += _simple;
+            smart += _smart;
+        }
+        simple /= len;
+        smart /= len;
 
-    println!("Simple: {:.8}%", simple * 100_f64);
-    println!("Smart: {:.8}%", smart * 100_f64);
+        println!("Simple: {:.8}%", simple * 100_f64);
+        println!("Smart: {:.8}%", smart * 100_f64);
+    };
+    task::block_on(async_main);
 }

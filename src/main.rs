@@ -31,11 +31,10 @@ fn main() {
     let iterations_part = iterations / parallell_count;
 
     for _ in 0..parallell_count {
-        let mut simple = Vec::<bool>::with_capacity(iterations_part);
-        let mut smart = Vec::<bool>::with_capacity(iterations_part);
-
         tasks.push(task::spawn(async move {
             let mut rng = thread_rng();
+            let mut simple = 0_usize;
+            let mut smart = 0_usize;
 
             for _ in 0..iterations_part {
                 // Set one door as "correct" (with prize)
@@ -44,26 +43,19 @@ fn main() {
                 // Make a random guess
                 let guess = rng.gen_range(0..num_doors);
 
-                // Gather data for if "simple" tactic is correct (do not switch).
-                simple.push(guess == correct);
-
-                // Gather data for if "smart" tactic is correct (always switch).
-                smart.push(guess != correct);
+                if guess == correct {
+                    // Gather data for if "simple" tactic is correct (do not switch).
+                    simple += 1;
+                } else {
+                    // Gather data for if "smart" tactic is correct (always switch).
+                    smart += 1;
+                }
             }
 
-            let fold = |v: &Vec<bool>| {
-                let fun = |acc, &x| {
-                    if x {
-                        acc + 1
-                    } else {
-                        acc
-                    }
-                };
-
-                (v.iter().fold(0, fun) as f64 / iterations_part as f64) * 100_f64
-            };
-
-            (fold(&simple), fold(&smart))
+            (
+                simple as f64 / iterations_part as f64,
+                smart as f64 / iterations_part as f64,
+            )
         }));
     }
 
@@ -81,6 +73,6 @@ fn main() {
     simple /= len;
     smart /= len;
 
-    println!("Simple: {:.8}%", simple);
-    println!("Smart: {:.8}%", smart);
+    println!("Simple: {:.8}%", simple * 100_f64);
+    println!("Smart: {:.8}%", smart * 100_f64);
 }

@@ -1,9 +1,5 @@
 /// Monty Hall Problem numerical test (not proof)
-use async_std::{
-    prelude::*,
-    sync::Arc,
-    task::{self, block_on},
-};
+use async_std::task;
 use clap::Parser;
 use rand::{thread_rng, Rng};
 use std::thread::available_parallelism;
@@ -66,7 +62,7 @@ fn main() {
         let mut _simple;
         let mut _smart;
 
-        (_simple, _smart) = block_on(t);
+        (_simple, _smart) = task::block_on(t);
         simple += _simple;
         smart += _smart;
     }
